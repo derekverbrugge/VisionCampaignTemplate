@@ -1,7 +1,7 @@
 async function loadPartial(elementId, filePath) {
-  const target = document.getElementById(elementId);
+  const container = document.getElementById(elementId);
 
-  if (!target) {
+  if (!container) {
     return;
   }
 
@@ -12,33 +12,35 @@ async function loadPartial(elementId, filePath) {
       throw new Error(`Unable to load ${filePath}`);
     }
 
-    target.innerHTML = await response.text();
+    container.innerHTML = await response.text();
   } catch (error) {
     console.error(error);
-    target.innerHTML = "";
   }
 }
 
 function setupMobileMenu() {
   const menuToggle = document.querySelector(".menu-toggle");
-  const navigation = document.querySelector("#site-navigation");
+  const navigation = document.querySelector(".site-navigation");
 
   if (!menuToggle || !navigation) {
     return;
   }
 
   menuToggle.addEventListener("click", () => {
-    const isOpen =
-      menuToggle.getAttribute("aria-expanded") === "true";
+    const isOpen = navigation.classList.toggle("is-open");
 
-    menuToggle.setAttribute("aria-expanded", String(!isOpen));
-    navigation.classList.toggle("is-open", !isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute(
+      "aria-label",
+      isOpen ? "Close navigation menu" : "Open navigation menu"
+    );
   });
 
   navigation.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
-      menuToggle.setAttribute("aria-expanded", "false");
       navigation.classList.remove("is-open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open navigation menu");
     });
   });
 }
@@ -52,8 +54,10 @@ function setCopyrightYear() {
 }
 
 async function initializeSite() {
-  await loadPartial("site-header", "header.html");
-  await loadPartial("site-footer", "footer.html");
+  await Promise.all([
+    loadPartial("site-header", "header.html"),
+    loadPartial("site-footer", "footer.html")
+  ]);
 
   setupMobileMenu();
   setCopyrightYear();
