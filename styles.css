@@ -711,5 +711,5 @@ blockquote {
 }
 
 .additional-priorities[hidden] {
-  display: none;
+  display: none !important;
 }
