@@ -59,7 +59,12 @@ function setupMorePriorities() {
     const isExpanded =
       moreButton.getAttribute("aria-expanded") === "true";
 
-    additionalPriorities.hidden = isExpanded;
+    if (isExpanded) {
+      additionalPriorities.setAttribute("hidden", "");
+    } else {
+      additionalPriorities.removeAttribute("hidden");
+    }
+
     moreButton.setAttribute("aria-expanded", String(!isExpanded));
 
     const buttonText = moreButton.querySelector("span:first-child");
