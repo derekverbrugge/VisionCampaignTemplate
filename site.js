@@ -45,6 +45,40 @@ function setupMobileMenu() {
   });
 }
 
+function setupMorePriorities() {
+  const moreButton = document.querySelector(".more-priorities-button");
+  const additionalPriorities = document.getElementById(
+    "additional-priorities"
+  );
+
+  if (!moreButton || !additionalPriorities) {
+    return;
+  }
+
+  moreButton.addEventListener("click", () => {
+    const isExpanded =
+      moreButton.getAttribute("aria-expanded") === "true";
+
+    additionalPriorities.hidden = isExpanded;
+    moreButton.setAttribute("aria-expanded", String(!isExpanded));
+
+    const buttonText = moreButton.querySelector("span:first-child");
+    const buttonSymbol = moreButton.querySelector(
+      ".more-priorities-symbol"
+    );
+
+    if (buttonText) {
+      buttonText.textContent = isExpanded
+        ? "More Priorities"
+        : "Hide Priorities";
+    }
+
+    if (buttonSymbol) {
+      buttonSymbol.textContent = isExpanded ? "+" : "−";
+    }
+  });
+}
+
 function setCopyrightYear() {
   const yearElement = document.getElementById("copyright-year");
 
@@ -60,6 +94,7 @@ async function initializeSite() {
   ]);
 
   setupMobileMenu();
+  setupMorePriorities();
   setCopyrightYear();
 }
 
