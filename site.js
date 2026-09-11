@@ -1,106 +1,113 @@
-async function loadPartial(elementId, filePath) {
-  const container = document.getElementById(elementId);
+document.addEventListener("DOMContentLoaded", () => {
+  loadSharedContent();
+  setupMobileMenu();
+  setupMorePriorities();
+});
 
-  if (!container) {
-    return;
+async function loadSharedContent() {
+  const headerTarget = document.getElementById("site-header");
+  const footerTarget = document.getElementById("site-footer");
+
+  if (headerTarget) {
+    try {
+      const response = await fetch("header.html");
+
+      if (!response.ok) {
+        throw new Error(`Header request failed: ${response.status}`);
+      }
+
+      headerTarget.innerHTML = await response.text();
+    } catch (error) {
+      console.error("Unable to load header.html:", error);
+    }
   }
 
-  try {
-    const response = await fetch(filePath);
+  if (footerTarget) {
+    try {
+      const response = await fetch("footer.html");
 
-    if (!response.ok) {
-      throw new Error(`Unable to load ${filePath}`);
+      if (!response.ok) {
+        throw new Error(`Footer request failed: ${response.status}`);
+      }
+
+      footerTarget.innerHTML = await response.text();
+
+      const yearElement = document.getElementById("copyright-year");
+
+      if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+      }
+    } catch (error) {
+      console.error("Unable to load footer.html:", error);
     }
-
-    container.innerHTML = await response.text();
-  } catch (error) {
-    console.error(error);
   }
 }
 
 function setupMobileMenu() {
-  const menuToggle = document.querySelector(".menu-toggle");
-  const navigation = document.querySelector(".site-navigation");
+  document.addEventListener("click", (event) => {
+    const menuToggle = event.target.closest(".menu-toggle");
 
-  if (!menuToggle || !navigation) {
-    return;
-  }
+    if (!menuToggle) {
+      return;
+    }
 
-  menuToggle.addEventListener("click", () => {
+    const navigation = document.getElementById("site-navigation");
+
+    if (!navigation) {
+      return;
+    }
+
     const isOpen = navigation.classList.toggle("is-open");
 
     menuToggle.setAttribute("aria-expanded", String(isOpen));
-    menuToggle.setAttribute(
-      "aria-label",
-      isOpen ? "Close navigation menu" : "Open navigation menu"
-    );
+    menuToggle.textContent = isOpen ? "Close" : "Menu";
   });
 
-  navigation.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
+  document.addEventListener("click", (event) => {
+    const navigationLink = event.target.closest(
+      ".site-nav a"
+    );
+
+    if (!navigationLink) {
+      return;
+    }
+
+    const navigation = document.getElementById("site-navigation");
+    const menuToggle = document.querySelector(".menu-toggle");
+
+    if (navigation) {
       navigation.classList.remove("is-open");
+    }
+
+    if (menuToggle) {
       menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Open navigation menu");
-    });
+      menuToggle.textContent = "Menu";
+    }
   });
 }
 
 function setupMorePriorities() {
-  const moreButton = document.querySelector(".more-priorities-button");
+  const toggle = document.getElementById("more-priorities-toggle");
   const additionalPriorities = document.getElementById(
     "additional-priorities"
   );
 
-  if (!moreButton || !additionalPriorities) {
+  if (!toggle || !additionalPriorities) {
     return;
   }
 
-  moreButton.addEventListener("click", () => {
+  toggle.addEventListener("click", () => {
     const isExpanded =
-      moreButton.getAttribute("aria-expanded") === "true";
+      toggle.getAttribute("aria-expanded") === "true";
 
     if (isExpanded) {
       additionalPriorities.setAttribute("hidden", "");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.childNodes[0].textContent = "More priorities ";
     } else {
       additionalPriorities.removeAttribute("hidden");
-    }
-
-    moreButton.setAttribute("aria-expanded", String(!isExpanded));
-
-    const buttonText = moreButton.querySelector("span:first-child");
-    const buttonSymbol = moreButton.querySelector(
-      ".more-priorities-symbol"
-    );
-
-    if (buttonText) {
-      buttonText.textContent = isExpanded
-        ? "More Priorities"
-        : "Hide Priorities";
-    }
-
-    if (buttonSymbol) {
-      buttonSymbol.textContent = isExpanded ? "+" : "−";
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.childNodes[0].textContent = "Fewer priorities ";
     }
   });
 }
-
-function setCopyrightYear() {
-  const yearElement = document.getElementById("copyright-year");
-
-  if (yearElement) {
-    yearElement.textContent = new Date().getFullYear();
-  }
-}
-
-async function initializeSite() {
-  await Promise.all([
-    loadPartial("site-header", "header.html"),
-    loadPartial("site-footer", "footer.html")
-  ]);
-
-  setupMobileMenu();
-  setupMorePriorities();
-  setCopyrightYear();
-}
-
-initializeSite();
