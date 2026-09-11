@@ -665,3 +665,51 @@ blockquote {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* More priorities toggle */
+
+.more-priorities {
+  display: flex;
+  justify-content: center;
+  margin-top: 34px;
+}
+
+.more-priorities-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(244, 244, 241, 0.3);
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.more-priorities-button:hover,
+.more-priorities-button:focus-visible {
+  border-color: var(--yellow);
+  color: var(--yellow);
+}
+
+.more-priorities-symbol {
+  color: var(--yellow);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.additional-priorities {
+  margin-top: 18px;
+}
+
+.additional-priorities[hidden] {
+  display: none;
+}
