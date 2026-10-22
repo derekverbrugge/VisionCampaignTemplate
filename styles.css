@@ -665,3 +665,6 @@ blockquote {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* Match the browser's bottom overscroll area to the final footer section. */
+html { background-color: var(--black-soft); }
