@@ -1,0 +1,5 @@
+# VisionCampaignTemplate
+
+- [Lucid Smith for State Representative](https://derekverbrugge.github.io/VisionCampaignTemplate/)
+
+[Full text](https://derekverbrugge.github.io/VisionCampaignTemplate/llms-full.txt)
